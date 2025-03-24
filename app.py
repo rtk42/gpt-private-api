@@ -4,13 +4,11 @@ from flask_session import Session
 from dotenv import load_dotenv
 import os
 import openai
-from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from google.cloud import firestore
 from datetime import timedelta
 import redis
 import logging
-import json
 import traceback
 from utils import count_tokens
 
