@@ -1,4 +1,6 @@
+import os
 import tiktoken
+from google.cloud import secretmanager
 import logging
 
 logger = logging.getLogger(__name__)
@@ -26,4 +28,15 @@ def count_tokens(text, model="gpt-3.5-turbo"):
     except Exception as e:
         logger.error(f"Error counting tokens for model {model}: {str(e)}")
         return 0 
+
+def get_secret(secret_id, version_id="latest"):
+    """Get secret from Google Cloud Secret Manager."""
+    try:
+        client = secretmanager.SecretManagerServiceClient()
+        name = f"projects/{os.getenv('GOOGLE_CLOUD_PROJECT')}/secrets/{secret_id}/versions/{version_id}"
+        response = client.access_secret_version(request={"name": name})
+        return response.payload.data.decode("UTF-8")
+    except Exception as e:
+        logger.error(f"Error accessing secret {secret_id}: {str(e)}")
+        raise 
     

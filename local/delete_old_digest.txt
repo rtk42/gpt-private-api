@@ -1,0 +1,8 @@
+gcloud container images list-tags gcr.io/llm-chatbot-241025/llm-chatbot \
+  --format="get(digest)" \
+  --sort-by=~timestamp.datetime | \
+  tail -n +2 | \
+  while read digest; do
+    echo "Deleting old digest: $digest"
+    gcloud container images delete gcr.io/llm-chatbot-241025/llm-chatbot@$digest --quiet
+  done
