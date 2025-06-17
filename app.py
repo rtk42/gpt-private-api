@@ -19,6 +19,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Load environment variables before configuring the app
+load_dotenv()
+
 app = Flask(__name__)
 # Use environment variable for secret key in production
 app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
@@ -49,8 +52,6 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # Initialize Flask-Session
 Session(app)
-
-load_dotenv()
 
 # OpenAI configuration
 MODELS = ['gpt-3.5-turbo', 'gpt-4']
