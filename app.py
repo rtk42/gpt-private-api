@@ -32,7 +32,7 @@ redis_url = os.getenv('REDIS_URL')
 if not redis_url:
     raise ValueError("REDIS_URL environment variable must be set")
 
-logger.info(f"Using Redis URL: {redis_url}")
+# logger.info(f"Using Redis URL: {redis_url}")
 try:
     app.config['SESSION_TYPE'] = 'redis'
     app.config['SESSION_REDIS'] = redis.from_url(redis_url)
