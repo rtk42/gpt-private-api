@@ -68,8 +68,8 @@ if not OPENAI_API_KEY:
     logger.error("OPENAI_API_KEY not set")
     raise ValueError("Please set OPENAI_API_KEY in your .env file")
 
-# Set the API key
-openai.api_key = OPENAI_API_KEY
+# Set the API key and initialize the OpenAI client
+openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Initialize Firestore
 try:
@@ -171,7 +171,7 @@ def chat():
         token_count = count_tokens(message, model)
         logger.info(f"Chat request from user {username} - Model: {model}, Tokens: {token_count}")
 
-        response = openai.ChatCompletion.create(
+        response = openai_client.chat.completions.create(
             model=model,
             messages=[{'role': 'user', 'content': message}]
         )
