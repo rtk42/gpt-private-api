@@ -19,28 +19,28 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+load_dotenv()
+
 app = Flask(__name__)
 # Use environment variable for secret key in production
 app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
 
-# Configure session based on environment
-if os.getenv('FLASK_ENV') == 'development':
-    logger.info("Using filesystem session for development")
-    app.config['SESSION_TYPE'] = 'filesystem'
-    app.config['SESSION_FILE_DIR'] = os.path.join(os.getcwd(), 'flask_session')
-    os.makedirs(app.config['SESSION_FILE_DIR'], exist_ok=True)
-else:
-    logger.info("Using Redis session for production")
+# Configure Redis-based session for all environments
+logger.info("Using Redis session backend")
+redis_url = os.getenv('REDIS_URL')
+if not redis_url:
+    raise ValueError("REDIS_URL environment variable must be set")
+
+logger.info(f"Using Redis URL: {redis_url}")
+try:
     app.config['SESSION_TYPE'] = 'redis'
-    redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
-    logger.info(f"Using Redis URL: {redis_url}")
-    try:
-        app.config['SESSION_REDIS'] = redis.from_url(redis_url)
-        logger.info("Successfully connected to Redis")
-    except Exception as e:
-        logger.error(f"Failed to connect to Redis: {str(e)}")
-        logger.error(traceback.format_exc())
-        raise
+    app.config['SESSION_REDIS'] = redis.from_url(redis_url)
+    logger.info("Successfully connected to Redis")
+except Exception as e:
+    logger.error(f"Failed to connect to Redis: {str(e)}")
+    logger.error(traceback.format_exc())
+    raise
 
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 app.config['SESSION_COOKIE_SECURE'] = True  # Enable secure cookies in production
@@ -50,7 +50,6 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 # Initialize Flask-Session
 Session(app)
 
-load_dotenv()
 
 # OpenAI configuration
 MODELS = ['gpt-3.5-turbo', 'gpt-4']
@@ -189,5 +188,4 @@ def chat():
         return jsonify({'error': 'An error occurred while processing your request'}), 500
 
 if __name__ == '__main__':
-    os.environ['FLASK_ENV'] = 'development'
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080))) 

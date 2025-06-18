@@ -40,12 +40,12 @@ Jinja2==3.1.6
 MarkupSafe==3.0.2
 msgspec==0.19.0
 multidict==6.2.0
-numpy==2.2.3
+numpy>=1.20
 openai>=1.0.0
 openpyxl==3.1.5
 packaging==24.2
 pandas==2.2.3
-pandas-stubs==2.2.3.241126
+pandas-stubs==2.2.1.240316
 propcache==0.3.0
 proto-plus==1.26.1
 protobuf==4.25.6
