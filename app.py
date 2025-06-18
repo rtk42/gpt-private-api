@@ -54,9 +54,10 @@ load_dotenv()
 
 # OpenAI configuration
 MODELS = ['gpt-3.5-turbo', 'gpt-4']
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')¸
 GOOGLE_PROJECT_ID = os.getenv('GOOGLE_PROJECT_ID')
-print(f"GOOGLE_PROJECT_ID: {GOOGLE_PROJECT_ID}")
+# print(f"GOOGLE_PROJECT_ID: {GOOGLE_PROJECT_ID}")
+
 # Clean up API key if it contains quotes or prefix
 if OPENAI_API_KEY:
     OPENAI_API_KEY = OPENAI_API_KEY.strip().strip('"').strip("'")
